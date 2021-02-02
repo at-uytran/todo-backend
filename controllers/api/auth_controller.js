@@ -13,14 +13,14 @@ class AuthController {
     if (_.isNil(user)) return resHelper(res, 404, null, 'Not found');
     var isAuth = await user.verifyPassword(password);
     if (isAuth) {
-      var token = jwt.sign({userName: userName, userId: user._id}, process.env.JWT_SECRET);
-      return resHelper(res, 200, {accessToken: token}, 'Sign in success');
+      var token = user.generateJWTToken();
+      return resHelper(res, 200, {token: token}, 'Sign in success');
     } else {
       return resHelper(res, 400, {error: 'Invalid usename or password'}, 'Sign in failed');
     }
   }
 
-  static async authenticate_user(req, res, next) {
+  static async authenticate_user (req, res, next) {
     var authHeader = req.headers['authorizationtoken'];
     if (authHeader && authHeader.split(' ')[0] !== 'Bearer') resHelper(res, 401, {error: 'Unauthorized'}, 'Unauthorized');
     if (_.isNil(authHeader)) return resHelper(res, 401, {error: 'Unauthorized'}, 'Unauthorized');
@@ -36,6 +36,14 @@ class AuthController {
     }
     if (_.isNil(decodedToken)) return resHelper(res, 400, {error: 'bad request'}, 'Bad request');
     next();
+  }
+
+  static user (req, res, next) {
+    try {
+      resHelper(res, 200, {user: res.locals.currentUser}, 'Load user success');
+    } catch {
+      resHelper(res, 400, {}, "Bad request");
+    }
   }
 }
 

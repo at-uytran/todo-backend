@@ -8,6 +8,7 @@ module.exports = function(router) {
   router.post('/register', UsersController.register);
   router.post('/auth/sign_in', AuthController.sign_in);
   router.post('/auth/authenticate_user', AuthController.authenticate_user);
+  router.post('/auth/user', AuthController.authenticate_user, AuthController.user);
   router.get('/todos', AuthController.authenticate_user, TodosController.index);
   router.post('/todos', AuthController.authenticate_user, TodosController.create);
   router.put('/todo/:id', AuthController.authenticate_user, TodosController.update);
