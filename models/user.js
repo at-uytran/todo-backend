@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var userSchema = require('./schemas/user_schema');
 var _ = require('lodash');
+var jwt = require('jsonwebtoken');
 
 const { Model } = mongoose;
 const bcrypt = require('bcrypt');
@@ -42,6 +43,10 @@ class User extends Model {
     if (_.isNil(passwordParam)) return null;
     passwordParam = passwordParam.toString();
     return bcrypt.compare(passwordParam, this.passwordHash);
+  }
+
+  generateJWTToken() {
+    return jwt.sign({userName: this.userName, userId: this._id}, process.env.JWT_SECRET);
   }
 
   jsonData() {
