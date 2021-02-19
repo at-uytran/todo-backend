@@ -51,8 +51,8 @@ class User extends Model {
 
   jsonData() {
     var data = {
-      _id: this._id,
-      name: this.name || null,
+      id: this._id,
+      userName: this.userName || null,
       email: this.email || null,
       birthday: this.birthday || null,
       address: this.address || null,

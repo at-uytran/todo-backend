@@ -40,7 +40,7 @@ class AuthController {
 
   static user (req, res, next) {
     try {
-      resHelper(res, 200, {user: res.locals.currentUser}, 'Load user success');
+      resHelper(res, 200, {user: res.locals.currentUser.jsonData()}, 'Load user success');
     } catch {
       resHelper(res, 400, {}, "Bad request");
     }

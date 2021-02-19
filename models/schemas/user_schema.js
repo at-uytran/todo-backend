@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  name: {type: String},
+  userName: {type: String},
   email: {type: String},
   passwordHash: {type: String},
   birthday: {type: Date},
