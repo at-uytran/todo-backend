@@ -46,7 +46,7 @@ class User extends Model {
   }
 
   generateJWTToken() {
-    return jwt.sign({userName: this.userName, userId: this._id}, process.env.JWT_SECRET);
+    return jwt.sign({email: this.email, userId: this._id}, process.env.JWT_SECRET);
   }
 
   jsonData() {
