@@ -1,26 +1,10 @@
 require('dotenv').config();
 var jwt = require('jsonwebtoken');
 var _ = require('lodash');
-var {resHelper} = require('../../helpers/response_helper');
-var User = require('../../models/user');
+var {resHelper} = require('../helpers/response_helper');
+var User = require('../models/user');
 
-class AuthController {
-  static async sign_in(req, res, next) {
-    var email = req.body.email;
-    var password = req.body.password;
-    if (_.isNil(email) || _.isNil(password)) return resHelper(res, 400, {}, 'Invalid parameter');
-    var user = await User.get({email: email});
-
-    if (_.isNil(user)) return resHelper(res, 404, null, 'Not found');
-    var isAuth = await user.verifyPassword(password);
-    if (isAuth) {
-      var token = user.generateJWTToken();
-      return resHelper(res, 200, {token: token}, 'Sign in success');
-    } else {
-      return resHelper(res, 400, {error: 'Invalid usename or password'}, 'Sign in failed');
-    }
-  }
-
+class AuthMiddleware {
   static async authenticate_user (req, res, next) {
     var authHeader = req.headers['authorizationtoken'];
     if (authHeader && authHeader.split(' ')[0] !== 'Bearer') resHelper(res, 401, {error: 'Unauthorized'}, 'Unauthorized');
@@ -38,14 +22,6 @@ class AuthController {
     if (_.isNil(decodedToken)) return resHelper(res, 400, {error: 'bad request'}, 'Bad request');
     next();
   }
-
-  static user (req, res, next) {
-    try {
-      resHelper(res, 200, {user: res.locals.currentUser}, 'Load user success');
-    } catch {
-      resHelper(res, 400, {}, "Bad request");
-    }
-  }
 }
 
-module.exports = AuthController;
+module.exports = AuthMiddleware;
